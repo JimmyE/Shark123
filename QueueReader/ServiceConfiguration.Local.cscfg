@@ -4,7 +4,7 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://[your namespace].servicebus.windows.net;SharedSecretIssuer=owner;SharedSecretValue=[your secret]" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://sharkqueuetest.servicebus.windows.net/;SharedAccessKeyName=webclient;SharedAccessKey=L8p/ATzofBU3e+SY5ChMmr4PbhODzjBRpKijFrNARg4=" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
