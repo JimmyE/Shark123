@@ -84,6 +84,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharkData\SharkData.csproj">
+      <Project>{A8B03F82-F525-4128-B574-0F104D92918B}</Project>
+      <Name>SharkData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharkService\SharkService.csproj">
       <Project>{b652f54d-442f-4266-8bf5-380a896d9804}</Project>
       <Name>SharkService</Name>

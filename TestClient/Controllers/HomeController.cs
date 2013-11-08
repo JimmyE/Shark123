@@ -57,7 +57,7 @@ namespace TestClient.Controllers
 
                 var dto = new UnderwriteRequestDto
                 {
-                    Name = "Spongebob",
+                    Name = "Spongebob + " + DateTime.Now.ToString("h:mm:ss.fff tt"),
                     Age = 10,
                     City = "Bikini Bottom"
                 };

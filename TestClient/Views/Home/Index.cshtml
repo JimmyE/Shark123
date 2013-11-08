@@ -17,8 +17,9 @@
     $(document).ready(function() {
 
         $('body').on('click', $('#sendMsgAsync'), function() {
+            console.log("click Async");
             $.post("/home/SendMsgAsync", function(result) {
-                $('#results').append("<li>" + result.message + "</li>");
+                $('#results').append("<li>Async: " + result.message + "</li>");
             })
             .fail(function() {
                $('#results').html("error -unable to send msg");
@@ -26,12 +27,14 @@
         });
 
         $('body').on('click', $('#sendMsgSync'), function() {
+            /*
             $.post("/home/SendMsgSync", function(result) {
                 $('#results').append("<li>" + result.message + "</li>");
             })
             .fail(function() {
                $('#results').html("error -unable to send msg");
             });
+            */
         });
     });
 </script>

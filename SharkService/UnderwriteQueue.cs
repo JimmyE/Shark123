@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.Serialization;
-using Microsoft.ServiceBus.Messaging;
 using SharkData;
 
 namespace SharkService
@@ -9,23 +7,25 @@ namespace SharkService
 
     public interface IUnderwriteRequestProcessor
     {
-        void ProcessMessage(BrokeredMessage receivedMessage);
+        UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto receivedMessage);
     }
 
     public class UnderwriteQueue : IUnderwriteRequestProcessor
     {
-        public void ProcessMessage(BrokeredMessage receivedMessage)
+        public UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto receivedMessage)
         {
             try
             {
-                var ser = new DataContractSerializer(typeof(UnderwriteRequestDto));
-                var foo = receivedMessage.GetBody<UnderwriteRequestDto>(ser);
+                //var ser = new DataContractSerializer(typeof(UnderwriteRequestDto));
+                //var foo = receivedMessage.GetBody<UnderwriteRequestDto>(ser);
                 //var msg = receivedMessage.Properties["mydata"];
-                Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber + " : " + foo.Name);
+
+                return new UnderwriteResponseDto {Status = 0, StatusMessage = "success"};
             }
             catch (Exception ex)
             {
                 Trace.WriteLine("ERROR ** Service Bus message: " + ex.Message);
+                return new UnderwriteResponseDto {Status = 1, StatusMessage = ex.Message};
             }
         }
     }
