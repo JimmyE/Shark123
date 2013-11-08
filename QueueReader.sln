@@ -7,6 +7,10 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "QueueReader", "QueueReader\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueueReaderWorkerRole", "QueueReaderWorkerRole\QueueReaderWorkerRole.csproj", "{90BCC3E6-9511-4112-95E8-66BA79EACA24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharkService", "SharkService\SharkService.csproj", "{B652F54D-442F-4266-8BF5-380A896D9804}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureServiceBusUnitTest", "AzureServiceBusUnitTest\AzureServiceBusUnitTest.csproj", "{08B5C88F-C3A9-43E6-AA51-BCEDEAF67AF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{90BCC3E6-9511-4112-95E8-66BA79EACA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90BCC3E6-9511-4112-95E8-66BA79EACA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90BCC3E6-9511-4112-95E8-66BA79EACA24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B652F54D-442F-4266-8BF5-380A896D9804}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B652F54D-442F-4266-8BF5-380A896D9804}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B652F54D-442F-4266-8BF5-380A896D9804}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B652F54D-442F-4266-8BF5-380A896D9804}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08B5C88F-C3A9-43E6-AA51-BCEDEAF67AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08B5C88F-C3A9-43E6-AA51-BCEDEAF67AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08B5C88F-C3A9-43E6-AA51-BCEDEAF67AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08B5C88F-C3A9-43E6-AA51-BCEDEAF67AF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

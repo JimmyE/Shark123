@@ -27,7 +27,7 @@ namespace QueueReaderWorkerRole
             ConfigureUnityResolver();
             Trace.WriteLine("Starting processing of messages");
 
-            var underwriteRequest = _unityContainer.Resolve<ISharkQueueProcessor>();
+            var underwriteRequest = _unityContainer.Resolve<IUnderwriteRequestProcessor>();
             _client.OnMessage(underwriteRequest.ProcessMessage);
             //_client.OnMessage(ProcessMessage);
 
@@ -38,7 +38,7 @@ namespace QueueReaderWorkerRole
         private void ConfigureUnityResolver()
         {
             _unityContainer = new UnityContainer();
-            _unityContainer.RegisterType<ISharkQueueProcessor, UnderwriteQueue>();
+            _unityContainer.RegisterType<IUnderwriteRequestProcessor, UnderwriteQueue>();
         }
 
         private void ProcessMessage(BrokeredMessage receivedMessage)
