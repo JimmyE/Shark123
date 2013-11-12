@@ -5,14 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.2</ProductVersion>
-    <ProjectGuid>8ea060ec-9af4-4476-8a08-474a49b605db</ProjectGuid>
+    <ProjectGuid>cbac2ec1-1133-46a6-b333-3b2b54f03bc4</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QueueReader</RootNamespace>
-    <AssemblyName>QueueReader</AssemblyName>
+    <RootNamespace>TestClient.Azure</RootNamespace>
+    <AssemblyName>TestClient.Azure</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
-    <Name>QueueReader</Name>
-    <PackageEnableRemoteDebugger>True</PackageEnableRemoteDebugger>
+    <Name>TestClient.Azure</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,26 +37,26 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QueueReaderWorkerRole\QueueReaderWorkerRole.csproj">
-      <Name>QueueReaderWorkerRole</Name>
-      <Project>{90bcc3e6-9511-4112-95e8-66ba79eaca24}</Project>
+    <ProjectReference Include="..\TestClient\TestClient.csproj">
+      <Name>TestClient</Name>
+      <Project>{1ba2e9f8-df69-4c21-a16a-5bf9126d444a}</Project>
       <Private>True</Private>
-      <RoleType>Worker</RoleType>
-      <RoleName>QueueReaderWorkerRole</RoleName>
+      <RoleType>Web</RoleType>
+      <RoleName>TestClient</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles" />
-    <Folder Include="QueueReaderWorkerRoleContent\" />
+    <Folder Include="TestClientContent\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="QueueReaderWorkerRoleContent\diagnostics.wadcfg">
+    <Content Include="TestClientContent\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PublishProfile Include="Profiles\sharttestProduction.azurePubxml" />
+    <PublishProfile Include="Profiles\sharktestclientProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

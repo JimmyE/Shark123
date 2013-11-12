@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using SharkData;
@@ -10,7 +12,7 @@ namespace TestClient.Controllers
     public class HomeController : Controller
     {
         private readonly string _connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-        private const string UnderwriteQueueName = "underwriterequest";
+        //private const string UnderwriteQueueName = "underwriterequest";
 
         public ActionResult Index()
         {
@@ -22,7 +24,7 @@ namespace TestClient.Controllers
             string msg = "";
             try
             {
-                msg = SendTestMessageToQueue();
+                msg = SendTestMessageToQueue(true);
             }
             catch (Exception ex)
             {
@@ -38,7 +40,7 @@ namespace TestClient.Controllers
             string msg = "";
             try
             {
-                msg = SendTestMessageToQueue();
+                msg = SendTestMessageToQueue(false);
             }
             catch (Exception ex)
             {
@@ -49,11 +51,13 @@ namespace TestClient.Controllers
             return Json(result);
         }
 
-        private string SendTestMessageToQueue()
+        private string SendTestMessageToQueue(bool isSync)
         {
             try
             {
-                var client = QueueClient.CreateFromConnectionString(_connectionString, UnderwriteQueueName);
+                //ServiceBusEnvironment.SystemConnectivity.Mode = ConnectivityMode.Http;
+                //var client = QueueClient.CreateFromConnectionString(_connectionString, UnderwriteQueueName);
+                var client = QueueClient.CreateFromConnectionString(_connectionString, AppConstants.RequestQueueNameUnderwrite);
 
                 var dto = new UnderwriteRequestDto
                 {
@@ -66,10 +70,10 @@ namespace TestClient.Controllers
                 var msg = new BrokeredMessage(dto, ser);
                 client.Send(msg);
 
-
                 //msg.Properties["mydata"] = "Hello world";
                 //client.Send(msg);
 
+                Trace.TraceWarning("Client() - send message");
                 return string.Format("Success!    timestamp: {0}",  DateTime.Now.ToString("hh:mm:ss.fff tt"));
             }
             catch (Exception ex)

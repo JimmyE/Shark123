@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using SharkData;
 
 namespace SharkService
@@ -7,18 +8,16 @@ namespace SharkService
 
     public interface IUnderwriteRequestProcessor
     {
-        UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto receivedMessage);
+        UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto requestDto);
     }
 
     public class UnderwriteQueue : IUnderwriteRequestProcessor
     {
-        public UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto receivedMessage)
+        public UnderwriteResponseDto ProcessMessage(UnderwriteRequestDto requestDto)
         {
             try
             {
-                //var ser = new DataContractSerializer(typeof(UnderwriteRequestDto));
-                //var foo = receivedMessage.GetBody<UnderwriteRequestDto>(ser);
-                //var msg = receivedMessage.Properties["mydata"];
+                Thread.Sleep(TimeSpan.FromSeconds(3));
 
                 return new UnderwriteResponseDto {Status = 0, StatusMessage = "success"};
             }

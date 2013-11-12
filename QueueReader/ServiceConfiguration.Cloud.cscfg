@@ -3,8 +3,16 @@
   <Role name="QueueReaderWorkerRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://[your namespace].servicebus.windows.net;SharedSecretIssuer=owner;SharedSecretValue=[your secret]" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=sharktest;AccountKey=i2r5LtzVqdxrWoa6MiZAgqO10RC4/TavrL34FJPSGoUbVY/0pvk0ng9nmsNaRQsFY9Blkyu2Xer6Cg6/FSpfHQ==" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://sharkqueuetest.servicebus.windows.net/;SharedAccessKeyName=sharkclient;SharedAccessKey=1Fa5ahMIhE+HfltRa3jWjR21hoM/Dr43+2vdEdS8UZE=" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="jim@ecker.com" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEk5zoBHq36pScxepxsNZkIwDQYJKoZIhvcNAQEBBQAEggEAtLisa1p6Yll1qA0kOW0I9br/h/wJw/RJj/0UzzyyC8dKSA6t2fWpH0mLlGgpeGVOU3DnCHhpdKeJfDdMEkE7Lj6M0y0cCQVvos8iPQQkyT8q9SUwFYLl3xKPDtPfgkcKN9F0W8wXJ5smwx1LdSiahf3/iIRb689lwKpawOvFcUiO1U5s+DnNrD3rT2kFhY+GkvgJe2G0Phd1iJBbqwlp3k2G7l0+A3mPiwwjVMCt2XlSUSQFnFtcu581bcrfwrlKPUuzrw0ZjO3Iu9WBZOh0goeHd5ZiJ9voqVHk75voBseHtVzkGJI5zCRuyjM81E5imEHokaCwb3d02+zUokFSgDAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECFlkj15BWztigBCUywNL2CdW/G6kfq9BqvJh" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2014-11-08T23:59:59.0000000-05:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="6E519EC93ACF171366F8C1BE8DF9D2C3E787F8B3" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
 </ServiceConfiguration>

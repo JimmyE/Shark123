@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharkData;
 using SharkService;
-using Microsoft.ServiceBus.Messaging;
 
 namespace AzureServiceBusUnitTest
 {
@@ -20,8 +19,14 @@ namespace AzureServiceBusUnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            var msg = new BrokeredMessage();
-            _underwriteQueue.ProcessMessage(msg);
+            UnderwriteRequestDto dto = new UnderwriteRequestDto
+            {
+                Name = "test-name",
+                Age = 30
+            };
+            _underwriteQueue.ProcessMessage(dto);
+
+            Assert.IsNotNull(dto);
 
         }
     }

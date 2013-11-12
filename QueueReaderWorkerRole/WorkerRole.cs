@@ -10,6 +10,7 @@ using Microsoft.Practices.Unity.Configuration;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SharkData;
 using SharkService;
@@ -19,51 +20,59 @@ namespace QueueReaderWorkerRole
     public class WorkerRole : RoleEntryPoint
     {
         private readonly string _connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-        private const string RequestQueueName = "underwriterequest";
-        private const string ResponseQueueName = "underwriteresponse";
+        //private const string RequestQueueNameUnderwrite = "underwriterequest";
+        private const string ResponseQueueNameUnderwrite = "underwriteresponse";
+        private const string RequestQueueNameOnboarding = "onboardingrequest";
 
         private readonly DataContractSerializer _requestSerializer = new DataContractSerializer(typeof(UnderwriteRequestDto));
         private readonly DataContractSerializer _responseSerializer = new DataContractSerializer(typeof(UnderwriteRequestDto));
         ManualResetEvent _completedEvent = new ManualResetEvent(false);
 
         private UnityContainer _unityContainer;
-        private QueueClient _requestQueue;
-        //private QueueClient _responseQueue;
+        private QueueClient _requestQueueUnderwrite;
+        private QueueClient _responseQueueUnderwrite;
+        private QueueClient _requestQueueOnboarding;
         private IUnderwriteRequestProcessor _underwriteRequest;
 
         public override void Run()
         {
+            //Console.WriteLine("Foo() Run started (console.writeline msg)");
+            //Trace.TraceError("WorkRole.Run() starting (error level msg)");
+            Trace.TraceWarning("WorkRole.Run() starting (warning level msg)");
             ConfigureUnityResolver();
 
-<<<<<<< HEAD
-            var underwriteRequest = _unityContainer.Resolve<IUnderwriteRequestProcessor>();
-            _client.OnMessage(underwriteRequest.ProcessMessage);
-            //_client.OnMessage(ProcessMessage);
-=======
             _underwriteRequest = _unityContainer.Resolve<IUnderwriteRequestProcessor>();
 
-            _requestQueue.OnMessage(ProcessMessage);
->>>>>>> 508b2bdbff8b549c3ff18023003f816181a05536
+            _requestQueueUnderwrite.OnMessage(ProcessUnderwritingRequest);
+
+            //_requestQueueOnboarding.OnMessage(ProcessOnboardingRequest);
 
             _completedEvent.WaitOne();
         }
 
-        private void ProcessMessage(BrokeredMessage requestMsg)
+        private void ProcessUnderwritingRequest(BrokeredMessage requestMsg)
         {
-<<<<<<< HEAD
-            _unityContainer = new UnityContainer();
-            _unityContainer.RegisterType<IUnderwriteRequestProcessor, UnderwriteQueue>();
-=======
+            UnderwriteRequestDto dto = requestMsg.GetBody<UnderwriteRequestDto>(_requestSerializer);
 
-            var dto = requestMsg.GetBody<UnderwriteRequestDto>(_requestSerializer);
-
-           Trace.WriteLine("Processing Service Bus message: " + requestMsg.SequenceNumber + " : " + dto.Name);
+           //Trace.WriteLine("Processing Underwriting Request: " + requestMsg.SequenceNumber + " : " + dto.Name);
+           Trace.TraceError("Processing Underwriting Request (new): " + requestMsg.SequenceNumber + " : " + dto.Name);
 
             var result = _underwriteRequest.ProcessMessage(dto);
 
-            //var response = new BrokeredMessage(result, _responseSerializer) {SessionId = requestMsg.ReplyToSessionId, MessageId = requestMsg.MessageId};
-            //_responseQueue.Send(response);
->>>>>>> 508b2bdbff8b549c3ff18023003f816181a05536
+            var response = new BrokeredMessage(result, _responseSerializer)
+            {
+                SessionId = requestMsg.ReplyToSessionId,
+                MessageId = requestMsg.MessageId,
+                ReplyToSessionId = requestMsg.SessionId
+            };
+
+            requestMsg.Complete();
+            //_responseQueueUnderwrite.Send(response);
+        }
+
+        private void ProcessOnboardingRequest(BrokeredMessage requestMsg)
+        {
+            Trace.WriteLine("Processing Onboarding Request: " + requestMsg.SequenceNumber);
         }
 
         private void ConfigureUnityResolver()
@@ -74,31 +83,64 @@ namespace QueueReaderWorkerRole
 
         public override bool OnStart()
         {
-            // Set the maximum number of concurrent connections 
-            ServicePointManager.DefaultConnectionLimit = 12;
+            Trace.TraceError("OnStart() started");
+            try
+            {
+                // Set the maximum number of concurrent connections 
+                ServicePointManager.DefaultConnectionLimit = 12;
 
-            var namespaceManager = NamespaceManager.CreateFromConnectionString(_connectionString);
+                // ServiceBusEnvironment.SystemConnectivity.Mode = ConnectivityMode.Http;
 
-            _requestQueue = CreateQueueIfNecessary(namespaceManager, RequestQueueName);
-            //_responseQueue = CreateQueueIfNecessary(namespaceManager, ResponseQueueName);
+                var namespaceManager = NamespaceManager.CreateFromConnectionString(_connectionString);
 
-            return base.OnStart();
+                //_requestQueueUnderwrite = CreateQueueIfNecessary(namespaceManager, RequestQueueNameUnderwrite);
+                _requestQueueUnderwrite = CreateQueueIfNecessary(namespaceManager, AppConstants.RequestQueueNameUnderwrite);
+                _responseQueueUnderwrite = CreateQueueIfNecessary(namespaceManager, ResponseQueueNameUnderwrite);
+                _requestQueueOnboarding = CreateQueueIfNecessary(namespaceManager, RequestQueueNameOnboarding);
+
+                return base.OnStart();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("OnStart() error: " + ex.Message);
+                throw;
+            }
         }
 
         private QueueClient CreateQueueIfNecessary(NamespaceManager namespaceManager, string queueName)
         {
+            //Trace.TraceWarning("Does queue exist: " + queueName);
             if (!namespaceManager.QueueExists(queueName))
             {
+                Trace.TraceWarning("CreateQueue: " + _connectionString + " " + queueName);
                 namespaceManager.CreateQueue(queueName);
             }
             
-            return QueueClient.CreateFromConnectionString(_connectionString, queueName);
+            Trace.TraceWarning("Get QueueClient from ConnectionString: " + _connectionString + " " + queueName);
+            var qc = QueueClient.CreateFromConnectionString(_connectionString, queueName);
+            if (qc == null)
+            {
+                Trace.TraceError("CreateQueue() failed - queueClient is null");
+            }
+            return qc;
+            //return QueueClient.CreateFromConnectionString(_connectionString, queueName);
+        }
+
+        private void ConfigDiagnostics()
+        {
+            DiagnosticMonitorConfiguration config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            config.ConfigurationChangePollInterval = TimeSpan.FromMinutes(1d);
+            config.Logs.BufferQuotaInMB = 500;
+            config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;
+            config.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1d);
+
+            DiagnosticMonitor.Start( "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
         }
 
         public override void OnStop()
         {
             // Close the connection to Service Bus Queue
-            _requestQueue.Close();
+            _requestQueueUnderwrite.Close();
             _completedEvent.Set();
             base.OnStop();
         }
