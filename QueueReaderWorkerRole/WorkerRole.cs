@@ -43,8 +43,8 @@ namespace QueueReaderWorkerRole
 
             _underwriteRequest = _unityContainer.Resolve<IUnderwriteRequestProcessor>();
 
-            _requestQueueUnderwrite.OnMessage(ProcessUnderwritingRequest);
-
+            // this syntax requires explicity set AutoComplete to true
+            _requestQueueUnderwrite.OnMessage(ProcessUnderwritingRequest, new OnMessageOptions{ AutoComplete = true, MaxConcurrentCalls = 10});
             //_requestQueueOnboarding.OnMessage(ProcessOnboardingRequest);
 
             _completedEvent.WaitOne();
@@ -59,12 +59,14 @@ namespace QueueReaderWorkerRole
 
             var result = _underwriteRequest.ProcessMessage(dto);
 
+            /*
             var response = new BrokeredMessage(result, _responseSerializer)
             {
                 SessionId = requestMsg.ReplyToSessionId,
                 MessageId = requestMsg.MessageId,
                 ReplyToSessionId = requestMsg.SessionId
             };
+            */
 
             requestMsg.Complete();
             //_responseQueueUnderwrite.Send(response);

@@ -59,9 +59,13 @@ namespace TestClient.Controllers
                 //var client = QueueClient.CreateFromConnectionString(_connectionString, UnderwriteQueueName);
                 var client = QueueClient.CreateFromConnectionString(_connectionString, AppConstants.RequestQueueNameUnderwrite);
 
+                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                DateTime timeStamp = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
+
                 var dto = new UnderwriteRequestDto
                 {
-                    Name = "Spongebob + " + DateTime.Now.ToString("h:mm:ss.fff tt"),
+                    //Name = "Spongebob + " + DateTime.Now.ToString("h:mm:ss.fff tt"),
+                    Name = "Eddie: " + timeStamp.ToString("h:mm:ss.fff tt"),
                     Age = 10,
                     City = "Bikini Bottom"
                 };
